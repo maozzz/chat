@@ -13,6 +13,7 @@ public class ServerApplication {
 
     public static void main(String[] args) {
         context = new AnnotationConfigApplicationContext();
+        context.getEnvironment().setActiveProfiles("server");
         context.scan("ru.villex.chat.server");
         context.scan("ru.villex.chat.common");
         context.refresh();

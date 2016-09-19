@@ -7,4 +7,5 @@ import ru.villex.chat.common.messages.Message;
  */
 public interface Handler extends Runnable {
     public void handle(Message message) throws IllegalArgumentException;
+    public Class<? extends Message> handlerOf();
 }

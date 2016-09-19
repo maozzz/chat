@@ -1,9 +1,12 @@
 package ru.villex.chat.client.socket;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.villex.chat.common.Sendable;
+import ru.villex.chat.common.handlers.HandlerManager;
 import ru.villex.chat.common.messages.Message;
+import ru.villex.chat.common.messages.MessageFactory;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -25,6 +28,12 @@ public class SocketConnection implements Runnable, Sendable {
     private Thread thread;
     OutputStream os;
 
+    @Autowired
+    HandlerManager handlerManager;
+
+    @Autowired
+    MessageFactory messageFactory;
+
     public SocketConnection(@Value("${socket.host}") String host, @Value("${socket.port}") int port) {
         this.port = port;
         this.host = host;
@@ -45,7 +54,8 @@ public class SocketConnection implements Runnable, Sendable {
 
             while (!stopped) {
                 String line = sc.next();
-                System.out.println("Получена строка: " + line);
+                Message message = messageFactory.fromJson(line);
+                handlerManager.handle(message);
                 Thread.sleep(50);
             }
             sc.close();
@@ -58,6 +68,8 @@ public class SocketConnection implements Runnable, Sendable {
         } catch (NoSuchElementException ex) {
             ex.printStackTrace();
             System.out.println("Соединение разорвано!");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         } finally {
             try {
                 if (os != null)

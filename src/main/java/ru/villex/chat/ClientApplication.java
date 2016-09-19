@@ -17,6 +17,7 @@ public class ClientApplication {
 
     public static void main(String[] args) {
         context = new AnnotationConfigApplicationContext();
+        context.getEnvironment().setActiveProfiles("default", "client");
         context.scan("ru.villex.chat.client");
         context.scan("ru.villex.chat.common");
         context.refresh();

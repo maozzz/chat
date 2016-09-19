@@ -13,17 +13,17 @@ import java.util.Map;
 @Component
 public class HandlerManager {
 
-    Map<Class<? extends Handler>, Handler> handlers = new HashMap<>();
+    Map<Class<? extends Message>, Handler> handlers = new HashMap<>();
 
     public HandlerManager(List<Handler> handlers) {
         for (Handler handler : handlers) {
-            this.handlers.put(handler.getClass(), handler);
+            this.handlers.put(handler.handlerOf(), handler);
         }
     }
 
     public void handle(Message message) {
         try {
-            handlers.get(message.handlerClass()).handle(message);
+            handlers.get(message.getClass()).handle(message);
         }catch (IllegalArgumentException e){
             System.out.println(e.getMessage());
         }
