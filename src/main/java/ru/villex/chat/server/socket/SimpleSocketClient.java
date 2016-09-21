@@ -17,6 +17,7 @@ import java.util.Scanner;
  * Created by maoz on 16.09.16.
  */
 public class SimpleSocketClient implements Runnable, Client {
+
     OutputStream os;
     Scanner sc;
     private boolean stopped = false;
@@ -27,8 +28,13 @@ public class SimpleSocketClient implements Runnable, Client {
 
     HandlerManager handlerManager;
 
+    Socket socket;
+    private int hashCode;
+
 
     public SimpleSocketClient(Socket socket, ApplicationContext context) throws IOException {
+        this.socket = socket;
+        this.hashCode = socket.getPort();
         System.out.println(this.getClass().getName() + ": Подключился новый клиент!");
         this.os = socket.getOutputStream();
         this.sc = new Scanner(socket.getInputStream());
@@ -85,5 +91,14 @@ public class SimpleSocketClient implements Runnable, Client {
     @Override
     public void send(Message message) throws IOException {
         writeln(message.toJson().getBytes());
+    }
+
+    @Override
+    public int getHashCode() {
+        return hashCode();
+    }
+
+    public int hashCode(){
+        return hashCode;
     }
 }

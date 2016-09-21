@@ -2,8 +2,6 @@ package ru.villex.chat.common.handlers;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 import ru.villex.chat.common.messages.Message;
 import ru.villex.chat.common.messages.TextMessage;
 
@@ -15,8 +13,6 @@ import java.util.concurrent.BlockingQueue;
 /**
  * Created by maoz on 18.09.16.
  */
-@Component
-@Profile("server")
 public class EchoHandler implements Handler {
 
     ApplicationContext context;

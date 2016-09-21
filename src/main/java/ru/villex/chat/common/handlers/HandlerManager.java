@@ -24,7 +24,7 @@ public class HandlerManager {
     public void handle(Message message) {
         try {
             handlers.get(message.getClass()).handle(message);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }

@@ -3,13 +3,12 @@ package ru.villex.chat.server.socket;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import ru.villex.chat.server.Clients;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by maoz on 16.09.16.
@@ -19,15 +18,16 @@ public class SocketListener implements Runnable {
 
     private boolean stopped = false;
     ApplicationContext context;
+    Clients clients;
+
+    private int port;
+    private Thread thread;
 
     public SocketListener(@Value("${socket.port}") int port, ApplicationContext context) {
         this.port = port;
         this.context = context;
+        this.clients = context.getBean(Clients.class);
     }
-
-    private int port;
-    private List<SimpleSocketClient> clients = new ArrayList();
-    private Thread thread;
 
     @PostConstruct
     private void init() {
@@ -42,7 +42,7 @@ public class SocketListener implements Runnable {
                 Socket clientSocket = socket.accept();
                 SimpleSocketClient client = new SimpleSocketClient(clientSocket, context);
                 client.start();
-                clients.add(client);
+                clients.registerClient(client);
             } catch (IOException e) {
                 e.printStackTrace();
             }
